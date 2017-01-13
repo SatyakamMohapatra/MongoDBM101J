@@ -5,6 +5,13 @@
 <title>Insert title here</title>
 </head>
 <body>
-${name}
+<h3>Select Fruits</h1>
+<form id="form-1" action="/fruits" method="post">
+<#list fruits as fruit> 
+<input type="radio" name="fruit" value="${fruit}">${fruit}
+</#list>
+</br>
+<button type="submit">submit</button>
+</form>
 </body>
 </html>
