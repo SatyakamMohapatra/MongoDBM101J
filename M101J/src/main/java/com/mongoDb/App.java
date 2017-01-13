@@ -24,7 +24,8 @@ public class App
 {
     public static void main( String[] args )
     {
-       Configuration configuration = new Configuration();
+       @SuppressWarnings("deprecation")
+	Configuration configuration = new Configuration();
        configuration.setClassForTemplateLoading(App.class,"/");
        try {
 		Template template = configuration.getTemplate("index.html");
