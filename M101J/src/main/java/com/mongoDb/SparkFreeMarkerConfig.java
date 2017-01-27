@@ -5,6 +5,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bson.Document;
+
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import spark.HaltException;
@@ -19,16 +25,22 @@ public class SparkFreeMarkerConfig {
 
 	       final Configuration configuration = new Configuration();
 	       configuration.setClassForTemplateLoading(SparkFreeMarkerConfig.class,"/");
+	       MongoClient client = new MongoClient();
+	       MongoDatabase database = client.getDatabase("learning");
+	       MongoCollection<Document> collection = database.getCollection("name");
+	       collection.insertOne(new Document("fruits",Arrays.asList("mango","orange","peach","lichi")).append("_id",74158));
 	       
 	       Spark.get("/", new Route() {
 	    	   StringWriter writer = new StringWriter();  
 			public Object handle(Request req, Response res) throws Exception {
 				 try{
 					 
-					 Template template = configuration.getTemplate("index.html");
-					 Map<String, Object> map = new HashMap<String, Object>();
-					 map.put("fruits",Arrays.asList("mango","orange","peach","lichi") );
-					 template.process(map, writer);
+					Template template = configuration.getTemplate("index.html");
+					Map<String, Object> map = new HashMap<String, Object>();
+					Document document = collection.find().first();
+					//map.put("name", "")
+					// map.put("fruits",Arrays.asList("mango","orange","peach","lichi") );
+					 template.process(document, writer);
 					 
 		    	   }catch (Exception e) {
 		    		   res.status(500);
